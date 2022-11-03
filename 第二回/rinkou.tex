@@ -1,0 +1,47 @@
+\documentclass[submit,techreq,noauthor]{eco}	% semi style
+\usepackage[dvips]{graphicx}
+\usepackage{listings, jlisting} 		% for source code
+\usepackage{url}
+\usepackage{setspace}
+\usepackage{here}
+%\setstretch{1.5} % 行間を広くします（資料チェックしてもらうときはコメントを外す）
+\lstset{
+  basicstyle={\ttfamily},
+  identifierstyle={\small},
+  commentstyle={\smallitshape},
+  keywordstyle={\small\bfseries},
+  ndkeywordstyle={\small},
+  stringstyle={\small\ttfamily},
+  frame={tb},
+  breaklines=true,
+  columns=[l]{fullflexible},
+  numbers=left,
+  xrightmargin=0zw,
+  xleftmargin=3zw,
+  numberstyle={\scriptsize},
+  stepnumber=1,
+  numbersep=1zw,
+  lineskip=-0.5ex
+}
+
+\begin{document}
+
+\semino {4/3}					% 年度/回数
+\date   {4/10/28/金}				% 平成/月/日/曜日
+\title  {ワニワニ}	% タイトル
+\author {山下 恭平}				% 氏名
+
+
+\begin{abstract}
+お会うへオフ帆会うhフォア絵hフォアフェオfはおウェおふあを絵fホアへf喘いふあえふぃ
+あエフェfは尾上hフォアふえf
+
+\end{abstract}
+\maketitle
+
+
+\section{はじめに}
+コンピュータが起動してからオペレーティングシステム(OS)が動作するまでの間に,様々なプログラム(BIOSやブートローダ)が動作している.しかし,私はOSが動作する前に動作するプログラムについての知見を持ち合わせていない.そこで,教育用OSのxv6-publicを用いてブートローダについて調査を行い,カーネルがメモリ上にロードされるまでの動作について明らかにする\\
+\indent 本稿では第2章で実験環境について説明し,第3章ではxv6の起動手順を示しBIOSとブートドライブの関係を確認する,第4章では実際にブートドライブが作成される手順を確認し,第5章でブートローダの動作を明らかにし,第6章でそれらをまとめる.
+
+\end{document}

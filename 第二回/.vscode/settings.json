@@ -1,0 +1,10 @@
+{
+    "cloudlatex.projectId": 588962,
+    "cloudlatex.outDir": "out",
+    "cloudlatex.enabled": true
+    "latex-workshop.latex.autoBuild.run": "never",
+    "latex-workshop.latex.outDir": "out",
+    "[latex]": {
+        "editor.formatOnSave": false,
+    }
+}
