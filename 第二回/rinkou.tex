@@ -26,22 +26,68 @@
 
 \begin{document}
 
-\semino {4/3}					% 年度/回数
-\date   {4/10/28/金}				% 平成/月/日/曜日
-\title  {ワニワニ}	% タイトル
+\semino {4/7}					% 年度/回数
+\date   {4/11/25/金}				% 平成/月/日/曜日
+\title  {Operating System Support for Safe and Efficient Auxiliary Execution}	% タイトル
 \author {山下 恭平}				% 氏名
 
-
 \begin{abstract}
-お会うへオフ帆会うhフォア絵hフォアフェオfはおウェおふあを絵fホアへf喘いふあえふぃ
-あエフェfは尾上hフォアふえf
+本稿はUSENIX,OSDI'22 に掲載されている論文「Operating System Support
+ for Safe and Efficient Auxiliary Execution」\begin{math}^{[1]}\end{math}の内容についてまとめた
+ものである.近年のアプリケーションは様々な補助タスクが実行されている.補助タスクとは,アプリ
+ケーションが自身のメンテナンス,自己管理を行うタスクのことである.これらのタス
+クは、アプリケーションのアドレス空間で実行することで,高い観測性と制御性
+を得るが,安全性と性能の問題が発生する.また,補助タスクを別のプロセスで実行す
+ると,分離性は高いが,観測性と制御性が劣る.本稿では,この問題を解決するために,
+補助タスクに対するサポートとして,orbitと呼ばれるOSの抽象化機能を提案する.
 
 \end{abstract}
 \maketitle
 
-
 \section{はじめに}
-コンピュータが起動してからオペレーティングシステム(OS)が動作するまでの間に,様々なプログラム(BIOSやブートローダ)が動作している.しかし,私はOSが動作する前に動作するプログラムについての知見を持ち合わせていない.そこで,教育用OSのxv6-publicを用いてブートローダについて調査を行い,カーネルがメモリ上にロードされるまでの動作について明らかにする\\
-\indent 本稿では第2章で実験環境について説明し,第3章ではxv6の起動手順を示しBIOSとブートドライブの関係を確認する,第4章では実際にブートドライブが作成される手順を確認し,第5章でブートローダの動作を明らかにし,第6章でそれらをまとめる.
+運用されているアプリケーションはその実行状況を調査し,最適化し,デバッグし,
+制御するために,頻繁にメンテナンスを行う必要がある.かつてはメンテナンスはアプリケ
+ーションの管理者が手動で行なっていたが,現在では多くのアプリケーションは,自身
+でメンテナンスを行うための補助タスクが行われている.例えばMySQLでは,デッド
+ロックを検出するとロールバックを行う機能が存在する.\begin{math}^{[2]}\end{math}
+\indent 既存のOSに搭載されているプロセスやスレッドといった抽象化機能は
+メインタスクの実行に適した設計がされており,補助タスクの実行には適していない.
+そのため,開発者は,分離は強いが観測と制御が非常に限定される（別プロセス）か,
+観測と制御は強いが分離はほとんどできない（スレッド）かのどちらかを選ばざる
+を得ない.この問題を解決するために,OSの補助タスクに対するサポートを提供する
+orbit抽象化を提案する.\\
+\indent orbitタスクは,協力な分離を提供する.同時に,状態同期機能により
+メインタスクを観測することも可能である.orbitのプロトタイプはLinux kernel 
+5.4.91に実装された.orbitの評価を行うためにMySQL,Apacheを含む6つの大規模
+アプリケーションから,7つの補助タスクを抽出し,orbitに移行することに成功した.
+また,全てのケースでアプリケーションはフォールトから保護されることがわかった.
+分離のコストを測定した所.orbitバージョンアプリケーションでは,中央値で3.3
+\%のオーバーヘッドが発生した.\\
+\indent 本稿では2章でこの研究が行われる背景について述べ,3章でorbitの詳細な
+説明を行う,4章でorbitの性能評価を行い,最後の5章では全体のまとめる.
+
+\section{研究の背景}
+
+
+\section{orbitについて}
+
+
+\section{orbitの性能評価}
+
+
+\section{終おわりに}
+
+
+
+% 参考文献はここに記述
+\begin{thebibliography}{99}
+  \bibitem{orbit} Yuzhuo Jing , Peng Huang : Operating System 
+  Support for Safe and Efficient Auxiliary Execution , 16th 
+  USENIX Symposium on Operating Systems Design and Implementation ,
+   pp.633 - 648 (2022)
+  \bibitem{MySQL} Oracle. MySQL's deadlock detection.\\
+  \url{https://dev.mysql.com/doc/refman/8.0/en/innodb-deadlock-detection.html}
+  (11/25/2022)
+\end{thebibliography}
 
 \end{document}
