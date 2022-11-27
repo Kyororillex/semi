@@ -121,22 +121,123 @@ Wedge\begin{math}^{[4]}\end{math}やlwC\begin{math}^{[5]}\end{math}
 を測定したところ,スループットが最大で79.5\%低下することが報告されている.\begin{math}^{[6]}\end{math}
 このことから,補助タスクはアプリケーションの性能を維持,向上させる機能を持っているのにも関わらず,
 逆にアプリケーションに害を与える可能性が存在する.\\
-\indent 補助タスクの安全性と性能に関する懸念に対処するために,Fork-based Execution Model とSandbox-based Execution Modelという2つの
-代替案がある.
+\indent これらの補助タスクの安全性と性能に関する懸念に対処するために,Fork-based Execution Model とS
+andbox-based Execution Modelという2つの補助タスク実行モデルを紹介する.
 
 \subsubsection*{Fork-based Execution Model}
+このモデルでは,アプリケーションは補助タスクが実行される前にfork()システムコー
+ルを行い,子プロセスでタスクの機能を実行するように切り替える.これにより,メインタスクと
+補助タスクはアドレス空間が分離されているため,強い分離を得ることができる.また,fork()に
+より,子プロセスは親プロセスのアドレス空間のコピーを保持するため,高い観測性を得られる.
+しかし,子プロセスで動作が完了しても,親プロセスには変更を加えることができない,つまり,
+制御性を持たないことが問題として挙げられる.また,メインタスクが大きいアドレス空間を保持
+している場合,fork()によって生成される子プロセスも大きくなり,オーバーヘッドが発生する.
 
 \subsubsection*{Sandbox-based Execution Model}
-
+このモデルは,サンドボックス内で補助タスクを実行する方法である.サンドボックスとは,
+通常使用する領域からは隔離された,保護された領域のことであり,サードパーティ製の拡張
+機能などの信頼されないコードを実行するのに適している.
+サンドボックス化されたプロセスは,ファイルシステムやシステムコールを含むリソース
+へのアクセス権限が制限される.しかし,2.2章でも述べた通り,補助タスクは信頼できる
+プログラムである.また,補助タスクにおける安全性の問題は,システムコールやファイルへの
+アクセスによるものではなく,不正なメモリアクセスや無限ループなどのバグや意図しない副作用
+によって発生する.さらに,サンドボックス化されたプロセスは,それらに割り当てられた
+メモリセグメントのみにアクセスする.このため,メインプログラムの観測性はほとんどなく、
+メインプログラムの状態を変更することもできない.
 
 \section{orbitについて}
 
+前章では,既存のタスク保護方法,タスク実行方法では,メンテナンスを行う
+補助タスクの補助に適していないことを確認した.そこで,補助タスクの保護に
+着目し,新しいOSの抽象化技法「orbit」を提案する.
+
+\subsection{orbitの概要}
+orbitには,スレッド,SFI,Wedgeなどの既存の抽象化機能と比較したとき,いくつかの
+独自の特徴を持つ.
+\begin{quote}
+  \begin{itemize}
+   \item orbitは独自のアドレス空間を保持し,スケジューリングが可能である.
+   \item 各orbitはメインプロセスと結合しているが、強力に分離されている.
+   \item 各orbitのアドレス空間は,メインプロセスのミラーである.
+  \end{itemize}
+\end{quote}
+これらの特徴により,orbitタスクがクラッシュしても,メインタスクには影響は出ない.
+また,orbitのアドレス空間はメインプロセスのミラーであるため,高い観測性を持つ.
+
+\subsection{orbitの課題と解決法}
+orbitの設計において大きく2つの課題が存在する.
+\begin{quote}
+  \begin{itemize}
+   \item 分離と観測の両立が困難であること.
+   \item 分離によるメインタスクの性能低下がおおきいこと.
+  \end{itemize}
+\end{quote}
+
+一つ目の課題については,コピーオンライト機構を用いて,メインタスクがorbitタスクを
+呼び出すたびに,メインプロセスのアドレス空間をorbitのアドレス空間へ自動的に状態
+を同期させるメモリスナップショットによって解決する.
+
+2つ目は,orbitタスクが必要とする状態だけを,orbitのアドレス空間に同期することで,
+オーバーヘッドの発生を防いでいる.(図3)
+
+\begin{figure}[H]
+  \centering
+  \includegraphics[width=5.5cm]{fig/pic2.eps}
+  \caption{orbitタスク同期の様子}
+\end{figure}
+
+\subsection{orbitの詳細}
+
+\begin{figure}[H]
+  \centering
+  \includegraphics[width=5.5cm]{fig/pic3.eps}
+  \caption{orbit動作例}
+\end{figure}
+
+orbitタスクの動作例を図3に示す,orbitの持つ特徴として,強い隔離,利便性の高いプログラミングモデル,
+自動的な状態の同期,メインタスクの改変,ファーストクラスエンティティが挙げられる.ここでは,
+それらの特徴について説明する.
+
+\subsubsection*{強い隔離}
+各orbitタスクにはそれぞれ独自のアドレス空間を保持する.そのため
+オービット上で障害が発生しても,メインプログラムや他のオービット上のタスクが危険に
+さらされることはない.また,ほとんどのオービットタスクは,メインプログラムを長時間ブロック
+することなく,非同期で実行される。
+
+\subsubsection*{利便性の高いプログラミングモデル}
+orbitはAPIによって提供される.そのため,開発者はメインプログラム内にorbitタスクの
+関数を書き,メインプログラムのほとんど全ての状態変数を直接参照することができる.これは
+従来の開発手法であるスレッドモデルに近く,開発者が慣れ親しんだ方法で実装が可能である.
+実際に,MySQLのデッドロック検出タスクは7行の追加と2行の削除で実現できた.
+
+\subsubsection*{自動的な状態の同期}
+オービットタスクのアドレス空間の特徴は,ほとんどがターゲットのアドレス空間の断片の
+ミラーであることだ.OSは、メインプログラムの各タスク呼び出しの前に,指定された状態を自動的にオ
+ービットアドレス空間に一方向に同期させる
+
+\subsubsection*{コントロールされたメインタスクの改変}
+通常のオービットはメインプログラムを観測するだけだが,特権オービットはメインプログラムの状態を
+変更することができる.しかし,任意の時間に任意の変更することはできない.変更は,スクラッチ空間と
+インタフェースを用いて行う必要がある.
+
+\subsubsection*{ファーストクラスエンティティ}
+オービットタスクはファーストクラスのOSエンティティである.通常のプロセスやスレッドのようにスケジューリング可
+能である.
 
 \section{orbitの性能評価}
 
+\begin{table}[H]
+  \centering
+  \caption{性能}
+  \begin{tabular}{cccc}
+  \hline
+        & 32MB   & 1GB     & 8GB      \\ \hline
+  orbit & 80.51  & 116.36  & 115.30   \\
+  fork  & 294.24 & 6859.36 & 53519.45 \\ \hline
+  \end{tabular}
+  \end{table}
 
 \section{おわりに}
-
 
 
 % 参考文献はここに記述
@@ -164,5 +265,21 @@ Wedge\begin{math}^{[4]}\end{math}やlwC\begin{math}^{[5]}\end{math}
   \bibitem{MySQL}InnoDB deadlock detection is CPU intensive with many locks on a single row.
     \url{https://bugs.mysql.com/bug.php?id=49047} . (11/25/2022)
 \end{thebibliography}
+
+\begin{table*}[]
+  \caption{orbitAPI}
+  \begin{tabular}{ll}
+  \hline
+  \textbf{API}                                                                                                                                                                               & \textbf{Description}                                                                                                                                                \\ \hline
+  \begin{tabular}[c]{@{}l@{}}orbit *orbit\_create(const char *name, orbit\_entry entry, \\                             void* (*init)(void))\end{tabular}                                     & \begin{tabular}[c]{@{}l@{}}create an orbit task with a name, an entry function, and an \\ optional initialization function\end{tabular}                             \\
+  int orbit\_destroy(orbit *ob)                                                                                                                                                              & destroy the specified orbit task                                                                                                                                    \\
+  orbit\_area *orbit\_area\_create(size\_t init\_size, orbit *ob)                                                                                                                            & create an orbit memory area with an initial size                                                                                                                    \\
+  void *orbit\_alloc(orbit\_area *area, size\_t size)                                                                                                                                        & allocate an object of size from the orbit area                                                                                                                      \\ \hline
+  \begin{tabular}[c]{@{}l@{}}long orbit\_call(orbit *ob, size\_t narea, orbit\_area** areas, \\                         orbit\_entry func\_once, void *arg, size\_t argsize)\end{tabular}    & \begin{tabular}[c]{@{}l@{}}invokes a synchronous call to the orbit task function with\\ the specific area(s) and arguments, blocks until task finishes\end{tabular} \\
+  \begin{tabular}[c]{@{}l@{}}orbit\_future *orbit\_call\_async(orbit *ob, int flags, size\_t narea, \\                       orbit\_area** areas, orbit\_entry func\_once, ...)\end{tabular} & \begin{tabular}[c]{@{}l@{}}nvokes an asynchronous call to the orbit task function,\\  returns an orbit\_future that can be later retrieved\end{tabular}             \\
+  long pull\_orbit(orbit\_future *f, orbit\_update *update)                                                                                                                                  & main program waits and retrieves update from orbit future f                                                                                                         \\
+  long orbit\_push(orbit\_update *update, orbit\_future *f)                                                                                                                                  & orbit passes update to an existing orbit future f                                                                                                                   \\ \hline
+  \end{tabular}
+\end{table*}
 
 \end{document}
