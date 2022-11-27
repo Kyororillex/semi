@@ -1,4 +1,4 @@
-This is e-pTeX, Version 3.141592653-p3.9.0-210218-2.6 (utf8.euc) (TeX Live 2021) (preloaded format=platex 2022.7.30)  27 NOV 2022 18:13
+This is e-pTeX, Version 3.141592653-p3.9.0-210218-2.6 (utf8.euc) (TeX Live 2021) (preloaded format=platex 2022.7.30)  27 NOV 2022 23:27
 entering extended mode
  restricted \write18 enabled.
 **rinkou.tex
@@ -207,41 +207,31 @@ File: fig/pic2.eps Graphic file (type eps)
 File: fig/pic3.eps Graphic file (type eps)
  <fig/pic3.eps>
 LaTeX Font Info:    Calculating math sizes for size <8.13184> on input line 232.
-
-Underfull \hbox (badness 10000) in paragraph at lines 249--252
+ [3]
+Underfull \hbox (badness 10000) in paragraph at lines 260--263
 []$\OT1/cmtt/m/n/8.8711 https : / / dev . mysql . com / doc / refman / 8 . 0 / en /
- []
-
-[3]
-
-LaTeX Warning: No positions in optional float specifier.
-               Default added (so using `tbp') on input line 269.
-
-
-Overfull \hbox (36.23317pt too wide) in paragraph at lines 271--283
-[][][][] 
  []
 
 [4
 
-] [5] (./rinkou.aux)
+] (./rinkou.aux)
 
 LaTeX Warning: There were multiply-defined labels.
 
  ) 
 Here is how much of TeX's memory you used:
- 3133 strings out of 478739
- 48215 string characters out of 5858778
- 358646 words of memory out of 5000000
- 21579 multiletter control sequences out of 15000+600000
+ 3132 strings out of 478739
+ 48197 string characters out of 5858778
+ 357646 words of memory out of 5000000
+ 21578 multiletter control sequences out of 15000+600000
  490610 words of font info for 119 fonts, out of 8000000 for 9000
  929 hyphenation exceptions out of 8191
- 55i,15n,62p,405b,434s stack positions out of 5000i,500n,10000p,200000b,80000s
+ 55i,8n,62p,379b,410s stack positions out of 5000i,500n,10000p,200000b,80000s
 
-Output written on rinkou.dvi (5 pages, 27288 bytes).
+Output written on rinkou.dvi (4 pages, 26776 bytes).
 
 
 rinkou.dvi -> rinkou.pdf
-[1][2][3][4][5]
-206815 bytes written
+[1][2][3][4]
+209572 bytes written
 

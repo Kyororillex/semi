@@ -228,7 +228,7 @@ orbitはAPIによって提供される.そのため,開発者はメインプロ�
 
 \begin{table}[H]
   \centering
-  \caption{性能}
+  \caption{forkとの比較}
   \begin{tabular}{cccc}
   \hline
         & 32MB   & 1GB     & 8GB      \\ \hline
@@ -237,8 +237,19 @@ orbitはAPIによって提供される.そのため,開発者はメインプロ�
   \end{tabular}
   \end{table}
 
-\section{おわりに}
+  表1はforkとorbitそれぞれで補助タスクの呼び出しを100回行った際の,タスク容量別の
+  平均レイテンシである.表から分かるように,orbitは大きい容量を持つタスクに対しても,
+  必要な情報だけのスナップショットを取得するため,高速に動作することが分かる.
+  タスクが8GBの容量を持つときorbitはforkと比較して464倍早く動作することがわかった.
+  このことから,隔離によるオーバーヘッドの増加は十分許容の範囲だと考えられる.また,
+  MySQL、Apache、Nginx、Var-nish、Redis、LevelDBの7ツノ補助タスクをorbitに
+  移行し,正常に動作することを確認した.
 
+\section{おわりに}
+アプリケーションにおける補助タスクの動向と,これらのタスクの安全かつ効率的な実行を提供するための
+システムサポートの欠如について述べた.この問題を解決するために,新しいOS抽象化機能であるOrbitを提案,
+実装し動作することを確認した.Orbitは高い観測性と分離を持ち合わせており,補助タスク実行に大きく
+貢献することを確認できた。
 
 % 参考文献はここに記述
 \begin{thebibliography}{99}
@@ -266,20 +277,22 @@ orbitはAPIによって提供される.そのため,開発者はメインプロ�
     \url{https://bugs.mysql.com/bug.php?id=49047} . (11/25/2022)
 \end{thebibliography}
 
-\begin{table*}[]
-  \caption{orbitAPI}
-  \begin{tabular}{ll}
-  \hline
-  \textbf{API}                                                                                                                                                                               & \textbf{Description}                                                                                                                                                \\ \hline
-  \begin{tabular}[c]{@{}l@{}}orbit *orbit\_create(const char *name, orbit\_entry entry, \\                             void* (*init)(void))\end{tabular}                                     & \begin{tabular}[c]{@{}l@{}}create an orbit task with a name, an entry function, and an \\ optional initialization function\end{tabular}                             \\
-  int orbit\_destroy(orbit *ob)                                                                                                                                                              & destroy the specified orbit task                                                                                                                                    \\
-  orbit\_area *orbit\_area\_create(size\_t init\_size, orbit *ob)                                                                                                                            & create an orbit memory area with an initial size                                                                                                                    \\
-  void *orbit\_alloc(orbit\_area *area, size\_t size)                                                                                                                                        & allocate an object of size from the orbit area                                                                                                                      \\ \hline
-  \begin{tabular}[c]{@{}l@{}}long orbit\_call(orbit *ob, size\_t narea, orbit\_area** areas, \\                         orbit\_entry func\_once, void *arg, size\_t argsize)\end{tabular}    & \begin{tabular}[c]{@{}l@{}}invokes a synchronous call to the orbit task function with\\ the specific area(s) and arguments, blocks until task finishes\end{tabular} \\
-  \begin{tabular}[c]{@{}l@{}}orbit\_future *orbit\_call\_async(orbit *ob, int flags, size\_t narea, \\                       orbit\_area** areas, orbit\_entry func\_once, ...)\end{tabular} & \begin{tabular}[c]{@{}l@{}}nvokes an asynchronous call to the orbit task function,\\  returns an orbit\_future that can be later retrieved\end{tabular}             \\
-  long pull\_orbit(orbit\_future *f, orbit\_update *update)                                                                                                                                  & main program waits and retrieves update from orbit future f                                                                                                         \\
-  long orbit\_push(orbit\_update *update, orbit\_future *f)                                                                                                                                  & orbit passes update to an existing orbit future f                                                                                                                   \\ \hline
-  \end{tabular}
-\end{table*}
+% \begin{table*}[t]
+%   \caption{orbitAPI}
+%   \centering
+%   \small
+%   \begin{tabular}{ll}
+%   \hline
+%   \textbf{API}                                                                                                                                                                               & \textbf{Description}                                                                                                                                                \\ \hline
+%   \begin{tabular}[c]{@{}l@{}}orbit *orbit\_create(const char *name, orbit\_entry entry, \\                             void* (*init)(void))\end{tabular}                                     & \begin{tabular}[c]{@{}l@{}}create an orbit task with a name, an entry function, and an \\ optional initialization function\end{tabular}                             \\
+%   int orbit\_destroy(orbit *ob)                                                                                                                                                              & destroy the specified orbit task                                                                                                                                    \\
+%   orbit\_area *orbit\_area\_create(size\_t init\_size, orbit *ob)                                                                                                                            & create an orbit memory area with an initial size                                                                                                                    \\
+%   void *orbit\_alloc(orbit\_area *area, size\_t size)                                                                                                                                        & allocate an object of size from the orbit area                                                                                                                      \\ \hline
+%   \begin{tabular}[c]{@{}l@{}}long orbit\_call(orbit *ob, size\_t narea, orbit\_area** areas, \\                         orbit\_entry func\_once, void *arg, size\_t argsize)\end{tabular}    & \begin{tabular}[c]{@{}l@{}}invokes a synchronous call to the orbit task function with\\ the specific area(s) and arguments, blocks until task finishes\end{tabular} \\
+%   \begin{tabular}[c]{@{}l@{}}orbit\_future *orbit\_call\_async(orbit *ob, int flags, size\_t narea, \\                       orbit\_area** areas, orbit\_entry func\_once, ...)\end{tabular} & \begin{tabular}[c]{@{}l@{}}nvokes an asynchronous call to the orbit task function,\\  returns an orbit\_future that can be later retrieved\end{tabular}             \\
+%   long pull\_orbit(orbit\_future *f, orbit\_update *update)                                                                                                                                  & main program waits and retrieves update from orbit future f                                                                                                         \\
+%   long orbit\_push(orbit\_update *update, orbit\_future *f)                                                                                                                                  & orbit passes update to an existing orbit future f                                                                                                                   \\ \hline
+%   \end{tabular}
+% \end{table*}
 
 \end{document}
