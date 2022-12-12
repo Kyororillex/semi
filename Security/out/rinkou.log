@@ -1,4 +1,4 @@
-This is e-pTeX, Version 3.141592653-p3.9.0-210218-2.6 (utf8.euc) (TeX Live 2021) (preloaded format=platex 2022.7.30)  13 DEC 2022 01:15
+This is e-pTeX, Version 3.141592653-p3.9.0-210218-2.6 (utf8.euc) (TeX Live 2021) (preloaded format=platex 2022.7.30)  13 DEC 2022 01:20
 entering extended mode
  restricted \write18 enabled.
 **rinkou.tex
@@ -136,31 +136,7 @@ File: l3backend-dvips.def 2022-02-07 L3 backend support: dvips
 \g__pdf_backend_link_sf_int=\count279
 ) (./rinkou.aux
 
-LaTeX Warning: Label `sample' multiply defined.
-
-
-LaTeX Warning: Label `sample' multiply defined.
-
-
-LaTeX Warning: Label `sample' multiply defined.
-
-
-LaTeX Warning: Label `sample' multiply defined.
-
-
-LaTeX Warning: Label `sample' multiply defined.
-
-
-LaTeX Warning: Label `sample' multiply defined.
-
-
-LaTeX Warning: Label `sample' multiply defined.
-
-
-LaTeX Warning: Label `sample' multiply defined.
-
-
-LaTeX Warning: Label `sample' multiply defined.
+LaTeX Warning: Label `MySQL' multiply defined.
 
 )
 \openout1 = `rinkou.aux'.
@@ -185,101 +161,44 @@ LaTeX Font Info:    Checking defaults for JT1/mc/m/n on input line 27.
 LaTeX Font Info:    ... okay on input line 27.
 \c@lstlisting=\count280
 LaTeX Font Info:    Font shape `JT1/mc/bx/n' in size <8.8711> not available
-(Font)              Font shape `JT1/gt/m/n' tried instead on input line 35.
+(Font)              Font shape `JT1/gt/m/n' tried instead on input line 34.
 LaTeX Font Info:    Font shape `JY1/mc/bx/n' in size <8.8711> not available
-(Font)              Font shape `JY1/gt/m/n' tried instead on input line 35.
+(Font)              Font shape `JY1/gt/m/n' tried instead on input line 34.
+LaTeX Font Info:    Calculating math sizes for size <8.8711> on input line 36.
 LaTeX Font Info:    Font shape `JY1/fgb/m/n' will be
-(Font)              scaled to size 12.78766pt on input line 39.
+(Font)              scaled to size 12.78766pt on input line 45.
 LaTeX Font Info:    Font shape `JT1/gt/bx/n' in size <19.2207> not available
-(Font)              Font shape `JT1/gt/m/n' tried instead on input line 39.
+(Font)              Font shape `JT1/gt/m/n' tried instead on input line 45.
 LaTeX Font Info:    Font shape `JY1/gt/bx/n' in size <19.2207> not available
-(Font)              Font shape `JY1/gt/m/n' tried instead on input line 39.
+(Font)              Font shape `JY1/gt/m/n' tried instead on input line 45.
 LaTeX Font Info:    Font shape `JT1/gt/bx/n' in size <12> not available
-(Font)              Font shape `JT1/gt/m/n' tried instead on input line 39.
+(Font)              Font shape `JT1/gt/m/n' tried instead on input line 45.
 LaTeX Font Info:    Font shape `JY1/gt/bx/n' in size <12> not available
-(Font)              Font shape `JY1/gt/m/n' tried instead on input line 39.
+(Font)              Font shape `JY1/gt/m/n' tried instead on input line 45.
 LaTeX Font Info:    Font shape `JY1/gt/m/n' will be
-(Font)              scaled to size 11.82806pt on input line 39.
-LaTeX Font Info:    Calculating math sizes for size <9.61035> on input line 39.
+(Font)              scaled to size 11.82806pt on input line 45.
+LaTeX Font Info:    Calculating math sizes for size <9.61035> on input line 45.
 LaTeX Font Info:    Font shape `JY1/mc/m/n' will be
-(Font)              scaled to size 14.78487pt on input line 39.
+(Font)              scaled to size 14.78487pt on input line 45.
 LaTeX Font Info:    Font shape `JT1/mc/bx/n' in size <11.82813> not available
-(Font)              Font shape `JT1/gt/m/n' tried instead on input line 42.
+(Font)              Font shape `JT1/gt/m/n' tried instead on input line 47.
 LaTeX Font Info:    Font shape `JY1/mc/bx/n' in size <11.82813> not available
-(Font)              Font shape `JY1/gt/m/n' tried instead on input line 42.
-LaTeX Font Info:    Font shape `JT1/mc/bx/n' in size <8.13184> not available
-(Font)              Font shape `JT1/gt/m/n' tried instead on input line 50.
-LaTeX Font Info:    Font shape `JY1/mc/bx/n' in size <8.13184> not available
-(Font)              Font shape `JY1/gt/m/n' tried instead on input line 50.
-LaTeX Font Info:    Calculating math sizes for size <8.13184> on input line 52.
-File: fig/pic1.eps Graphic file (type eps)
- <fig/pic1.eps>
-LaTeX Font Info:    Font shape `JT1/mc/m/it' in size <9.61035> not available
-(Font)              Font shape `JT1/mc/m/n' tried instead on input line 94.
-LaTeX Font Info:    Font shape `JY1/mc/m/it' in size <9.61035> not available
-(Font)              Font shape `JY1/mc/m/n' tried instead on input line 94.
- [1
-
-
-]
-File: fig/pic2_1.eps Graphic file (type eps)
- <fig/pic2_1.eps>
-File: fig/pic3.eps Graphic file (type eps)
- <fig/pic3.eps>
-File: fig/pic2_2.eps Graphic file (type eps)
- <fig/pic2_2.eps>
-File: fig/pic4.eps Graphic file (type eps)
- <fig/pic4.eps>
-File: fig/pic5.eps Graphic file (type eps)
- <fig/pic5.eps>
-Overfull \hbox (0.89122pt too wide) in paragraph at lines 149--150
- [][] 
- []
-
+(Font)              Font shape `JY1/gt/m/n' tried instead on input line 47.
 LaTeX Font Info:    Font shape `JT1/mc/bx/n' in size <9.61035> not available
-(Font)              Font shape `JT1/gt/m/n' tried instead on input line 160.
+(Font)              Font shape `JT1/gt/m/n' tried instead on input line 74.
 LaTeX Font Info:    Font shape `JY1/mc/bx/n' in size <9.61035> not available
-(Font)              Font shape `JY1/gt/m/n' tried instead on input line 160.
-[2]
-File: fig/pic7.eps Graphic file (type eps)
- <fig/pic7.eps>
-Overfull \hbox (1.29272pt too wide) in paragraph at lines 192--193
- [][] 
+(Font)              Font shape `JY1/gt/m/n' tried instead on input line 74.
+
+Underfull \hbox (badness 10000) in paragraph at lines 79--82
+[]$\OT1/cmtt/m/n/8.8711 https : / / dev . mysql . com / doc / refman / 8 . 0 / en /
  []
 
-File: fig/pic6.eps Graphic file (type eps)
-<fig/pic6.eps>
-File: fig/pic8.eps Graphic file (type eps)
- <fig/pic8.eps>
-File: fig/pic9.eps Graphic file (type eps)
- <fig/pic9.eps>
-Overfull \hbox (30.08647pt too wide) in paragraph at lines 240--241
- [][] 
- []
+LaTeX Font Info:    Font shape `JT1/mc/m/it' in size <9.61035> not available
+(Font)              Font shape `JT1/mc/m/n' tried instead on input line 99.
+LaTeX Font Info:    Font shape `JY1/mc/m/it' in size <9.61035> not available
+(Font)              Font shape `JY1/mc/m/n' tried instead on input line 99.
+[1
 
-LaTeX Font Info:    Calculating math sizes for size <8.8711> on input line 250.
-LaTeX Font Info:    Trying to load font information for OML+cmr on input line 252.
-(/usr/local/texlive/2021/texmf-dist/tex/latex/base/omlcmr.fd
-File: omlcmr.fd 2019/12/16 v2.5j Standard LaTeX font definitions
-)
-LaTeX Font Info:    Font shape `OML/cmr/m/n' in size <8.8711> not available
-(Font)              Font shape `OML/cmm/m/it' tried instead on input line 252.
-
-Underfull \hbox (badness 10000) in paragraph at lines 251--254
-[]\OT1/cmr/m/n/8.8711 mit-pods/xv6-public \OML/cmm/m/it/8.8711 <$\OT1/cmtt/m/n/8.8711 https : / / github . com /
- []
-
-[3]
-Underfull \hbox (badness 10000) in paragraph at lines 254--257
-\OT1/cmtt/m/n/8.8711 content / www / jp / ja / architecture-[]and-[]technology /
- []
-
-
-Overfull \hbox (81.33502pt too wide) in paragraph at lines 254--257
-\OT1/cmtt/m/n/8.8711 64-[]ia-[]32-[]architectures-[]software-[]developer-[]vol-[]3a-[]part-[]1-[]manual .
- []
-
-[4
 
 ] (./rinkou.aux)
 
@@ -287,18 +206,18 @@ LaTeX Warning: There were multiply-defined labels.
 
  ) 
 Here is how much of TeX's memory you used:
- 3185 strings out of 478739
- 49123 string characters out of 5858778
- 362654 words of memory out of 5000000
- 21621 multiletter control sequences out of 15000+600000
- 490610 words of font info for 119 fonts, out of 8000000 for 9000
+ 3087 strings out of 478739
+ 47503 string characters out of 5858778
+ 361646 words of memory out of 5000000
+ 21542 multiletter control sequences out of 15000+600000
+ 486355 words of font info for 102 fonts, out of 8000000 for 9000
  929 hyphenation exceptions out of 8191
- 55i,8n,62p,581b,437s stack positions out of 5000i,500n,10000p,200000b,80000s
+ 55i,6n,62p,266b,362s stack positions out of 5000i,500n,10000p,200000b,80000s
 
-Output written on rinkou.dvi (4 pages, 19560 bytes).
+Output written on rinkou.dvi (1 page, 7556 bytes).
 
 
 rinkou.dvi -> rinkou.pdf
-[1][2][3][4]
-731128 bytes written
+[1]
+83171 bytes written
 
