@@ -26,72 +26,43 @@
 
 \begin{document}
 
-\semino {4/7}					% 年度/回数
-\date   {4/11/25/金}				% 平成/月/日/曜日
-\title  {Operating System Support for Safe and Efficient Auxiliary Execution}	% タイトル
+\semino {4/10}					% 年度/回数
+\date   {4/12/16/金}				% 平成/月/日/曜日
+\title  {Expected Exploitability: Predicting the Development of Functional Vulnerability Exploits}	% タイトル
 \author {山下 恭平}				% 氏名
 
 \begin{abstract}
-本稿はUSENIX,OSDI'22 に掲載されている論文「Operating System Support
- for Safe and Efficient Auxiliary Execution」\begin{math}^{[1]}\end{math}の内容についてまとめた
-ものである.近年のアプリケーションは様々な補助タスクが実行されている.補助タスクとは,アプリ
-ケーションが自身のメンテナンス,自己管理を行うタスクのことである.これらのタス
-クは、アプリケーションのアドレス空間で実行することで,高い観測性と制御性
-を得るが,安全性と性能の問題が発生する.また,補助タスクを別のプロセスで実行す
-ると,分離性は高いが,観測性と制御性が劣る.本稿では,この問題を解決するために,
-補助タスクに対するサポートとして,orbitと呼ばれるOSの抽象化機能を提案する.
+本稿は31st USENIX Security Symposiumにて掲載された論文「Expected Exploitability: Predicting 
+the Development of Functional Vulnerability Exploits」\begin{math}^{[1]}\end{math}の内容に
+ついてまとめたものである.既存の脆弱性評価基準の分析を通じて得られる結果は,その脆弱性が悪用されることを予測する
+のには不十分であるため,ソフトウェア脆弱性の公開時の悪用可能性を評価することは困難である.さらに,「悪用できない」
+という評価は不確実性が高く,悪用可能性の評価にはバイアスがかかっていることが問題として挙げられる.これらの問題を解決するために,機能的な
+エクスプロイトが開発される可能性を経時的に反映する,Expected Exploitability（EE）と呼ばれる新しい指標を提案
+する.
 
 \end{abstract}
 \maketitle
 
 \section{はじめに}
-運用されているアプリケーションはその実行状況を調査し,最適化し,デバッグし,
-制御するために,頻繁にメンテナンスを行う必要がある.かつてはメンテナンスはアプリケ
-ーションの管理者が手動で行なっていたが,現在では多くのアプリケーションは,自身
-でメンテナンスを行うための補助タスクが行われている.例えばMySQLでは,デッド
-ロックを検出するとロールバックを行う機能が存在する.\begin{math}^{[2]}\end{math}
-そのため補助タスクはアプリケーションの信頼性や観測性に大きく影響する.
-\indent 既存のOSに搭載されているプロセスやスレッドといった抽象化機能は
-メインタスクの実行に適した設計がされており,補助タスクの実行には適していない.
-そのため,開発者は,分離は強いが観測と制御が非常に限定される（別プロセス）か,
-観測と制御は強いが分離はほとんどできない（スレッド）かのどちらかを選ばざる
-を得ない.この問題を解決するために,OSの補助タスクに対するサポートを提供する
-orbit抽象化を提案する.\\
-\indent orbitタスクは,協力な分離を提供する.同時に,状態同期機能により
-メインタスクを観測することも可能である.orbitのプロトタイプはLinux kernel 
-5.4.91に実装された.orbitの評価を行うためにMySQL,Apacheを含む6つの大規模
-アプリケーションから,7つの補助タスクを抽出し,orbitに移行することに成功した.
-また,全てのケースでアプリケーションはフォールトから保護されることがわかった.
-分離のコストを測定した所.orbitバージョンアプリケーションでは,中央値で3.3
-\%のオーバーヘッドが発生した.\\
-\indent 本稿では2章でこの研究が行われる背景について述べ,3章でorbitの詳細な
-説明を行う,4章でorbitの性能評価を行い,最後の5章では全体のまとめる.
+エクスプロイトがセキュリティに深刻な影響を与えた事例として,2017年に世界中で大流行したWannaCryとNotPetya
+がある.これらが悪名高い成功を納めた原因として,武器化されたエクスプロイトの使用が挙げられる.しかし,武器となり得る
+脆弱性を利用するプログラムを開発する難易度が上がっていることから,既知の脆弱性のうち5\%のみを悪用することに注力
+するようになっている.そういった中で,着目すべき脆弱性の優先順位をつけることで業界の人々に対して最適な意思決定を
+もたらし,悪用防止に向けた研究機会の深い理解のために,各脆弱性の悪用可能性を評価する必要がある.しかし,悪用可能性
+の評価は,どの脆弱性が,どのように利用されるかが不明なため,困難である.具体的には,WannaCryやNotPetyaによって
+悪用された脆弱性であるCVE-2017-0144は,当時の専門家が推奨するパッチから省かれたいた.このことから,エクスプロイト
+の開発によってエクスプロイト可能性を証明することはできるが,非エクスプロイト可能性を証明することは困難である.
+この結果,「悪用不可能」という評価にはバイアスが発生し,不確実性を持つことが分かる.\\
+この問題を解決するために,Expected Exploitability (EE)と呼ばれる新しい指標を提案する.
 
 \section{おわりに}
 
 
 % 参考文献はここに記述
 \begin{thebibliography}{99}
-  \bibitem{orbit} Yuzhuo Jing , Peng Huang . Operating System 
-  Support for Safe and Efficient Auxiliary Execution , 16th 
-  USENIX Symposium on Operating Systems Design and Implementation ,
-   page 633 - 648 (2022).
-  \bibitem{MySQL} Oracle. MySQL's deadlock detection.\\
-  \url{https://dev.mysql.com/doc/refman/8.0/en/innodb-deadlock-detection.html}
-  (11/25/2022)
-  \bibitem{SFI} R. Wahbe, S. Lucco, T. E. Anderson, and S. L. Graham .
-  : Efficient software-based fault isolation. In Proceedings of the 
-  Fourteenth ACM Symposium on Operating Systems Principles, SOSP '93,
-   page 203 - 216 , (1993).
-  \bibitem{Wedge}A. Bittau, P. Marchenko, M. Handley, and B. Karp. 
-  Wedge: Splitting applications into reduced-privilege compartments.
-   In Proceedings of the 5th USENIX Symposium on Networked Systems 
-   Design and Implementation, NSDI '08, page 309 - 322, (2008).
-  \bibitem{lwC}J. Litton, A. Vahldiek-Oberwagner, E. Elnikety, D. 
-  Garg, B. Bhattacharjee, and P. Druschel. Light-weight contexts: 
-  An OS abstraction for safety and performance. In Proceedings of
-  the 12th USENIX Conference on Operating Systems Design and Implementation,
-   OSDI '16, page 49-64, (2016).
+  \bibitem{main} Octavian Suciu , Connor Nelson , Zhuoer Lyu , Tiffany Bao , and Tudor Dumitras.
+    \quad Expected Exploitability: Predicting the Development of Functional Vulnerability 
+    Exploits. In 31th USENIX Security Symposium (USENIX Security 22), pages 377-394, 2022
   \bibitem{MySQL}InnoDB deadlock detection is CPU intensive with many locks on a single row.
     \url{https://bugs.mysql.com/bug.php?id=49047} . (11/25/2022)
 \end{thebibliography}
