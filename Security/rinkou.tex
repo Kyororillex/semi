@@ -47,13 +47,50 @@ the Development of Functional Vulnerability Exploits」\begin{math}^{[1]}\end{ma
 エクスプロイトがセキュリティに深刻な影響を与えた事例として,2017年に世界中で大流行したWannaCryとNotPetya
 がある.これらが悪名高い成功を納めた原因として,武器化されたエクスプロイトの使用が挙げられる.しかし,武器となり得る
 脆弱性を利用するプログラムを開発する難易度が上がっていることから,既知の脆弱性のうち5\%のみを悪用することに注力
-するようになっている.そういった中で,着目すべき脆弱性の優先順位をつけることで業界の人々に対して最適な意思決定を
+するようになっている.そういった中で,着目すべき脆弱性の優先順位をつけることで人々に対して最適な意思決定を
 もたらし,悪用防止に向けた研究機会の深い理解のために,各脆弱性の悪用可能性を評価する必要がある.しかし,悪用可能性
 の評価は,どの脆弱性が,どのように利用されるかが不明なため,困難である.具体的には,WannaCryやNotPetyaによって
 悪用された脆弱性であるCVE-2017-0144は,当時の専門家が推奨するパッチから省かれたいた.このことから,エクスプロイト
 の開発によってエクスプロイト可能性を証明することはできるが,非エクスプロイト可能性を証明することは困難である.
 この結果,「悪用不可能」という評価にはバイアスが発生し,不確実性を持つことが分かる.\\
-この問題を解決するために,Expected Exploitability (EE)と呼ばれる新しい指標を提案する.
+この問題を解決するためにExpected Exploitability (EE)と呼ばれる新しい指標を提案する.
+この指標は,脆弱性を「悪用可能」または「悪用不可能」と決定的に分類するのではなく,類似の
+脆弱性に関する過去のパターンに基づいて,機能的なエクスプロイトが開発される可能性を時系列で
+継続的に推定するものである.ここで機能的なエクスプロイトとは,脆弱性が引き起こすセキュリティ
+上の問題を完全に実現するものであり,機能的なエクスプロイトは実際の攻撃を容易にする.この論文
+の目的は機能的なエクスプロイトが開発されることを予測するのが目的である.
+
+\section{問題の概要}
+エクスプロイトの開発によって,悪用可能性を証明することができるが,悪用不可能であることを
+証明するのは困難である.その代わりに,脆弱性悪用緩和の取り組みとして,悪用の難しさを
+把握する目的とした脆弱性スコアリングシステムがよく用いられる.以下にその例をあげる.\\
+\begin{quote}
+  \begin{itemize}
+   \item NVD CVSS\begin{math}^{[2]}\end{math}
+    \begin{itemize}
+      \item 必要なアクセス制御,攻撃ベクトルの複雑さ,権限レベルなど,様々な脆弱性の特性を0～4の値に落とし込んだもの.4が最も悪用可能性が高い.
+    \end{itemize}
+   \item Microsoft Exploitability Index\begin{math}^{[3]}\end{math}
+    \begin{itemize}
+      \item Microsoftが0〜3の4段階で悪用可能性を評価し割り当てる,Microsoft固有のスコア.
+    \end{itemize}
+   \item RedHat Severity\begin{math}^{[4]}\end{math}
+    \begin{itemize}
+      \item CVSSを補完し,RedHat製品に影響を与える脆弱性について専門家の評価によって,同様に脆弱性の悪用の難易度を評価したもの.\\
+    \end{itemize}
+  \end{itemize}
+\end{quote}
+しかし,これらのベンダーなどから提供される指標は,不正確であることが報告されている.
+具体的な事例として,Internet Explorerの悪用可能な脆弱性であるCVE-2018-8174は,CVSS
+悪用可能性スコア1.6を獲得し,脆弱性スコアの91\%以下に位置づけられた.同様に,Windows7
+から10に影響を及ぼす悪用される脆弱性であるCVE-2018-8440は,スコアが1.8とされた.
+
+
+\section{課題}
+
+\section{収集するデータ}
+
+\section{評価}
 
 \section{おわりに}
 
@@ -63,8 +100,12 @@ the Development of Functional Vulnerability Exploits」\begin{math}^{[1]}\end{ma
   \bibitem{main} Octavian Suciu , Connor Nelson , Zhuoer Lyu , Tiffany Bao , and Tudor Dumitras.
     \quad Expected Exploitability: Predicting the Development of Functional Vulnerability 
     Exploits. In 31th USENIX Security Symposium (USENIX Security 22), pages 377-394, 2022
-  \bibitem{MySQL}InnoDB deadlock detection is CPU intensive with many locks on a single row.
-    \url{https://bugs.mysql.com/bug.php?id=49047} . (11/25/2022)
+    \bibitem{NVD CVSS}A complete guide to the common vulnerability scoring system.\\
+      \url{https://www.first.org/cvss/v3.0/specification-document} . (15/12/2022)
+    \bibitem{Microsoft}Microsoft exploitability index. Microsoft.\\
+      \url{https://www.microsoft.com/en-us/msrc/exploitability-index} . (15/12/2022)
+    \bibitem{Red Hat}Severity Rating. RedHat.\\
+      \url{https://access.redhat.com/security/updates/classification/} . (15/12/2022)
 \end{thebibliography}
 
 \end{document}
