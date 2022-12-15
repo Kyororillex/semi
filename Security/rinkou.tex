@@ -53,17 +53,23 @@ the Development of Functional Vulnerability Exploits」\begin{math}^{[1]}\end{ma
 悪用された脆弱性であるCVE-2017-0144は,当時の専門家が推奨するパッチから省かれたいた.このことから,エクスプロイト
 の開発によってエクスプロイト可能性を証明することはできるが,非エクスプロイト可能性を証明することは困難である.
 この結果,「悪用不可能」という評価にはバイアスが発生し,不確実性を持つことが分かる.\\
-この問題を解決するためにExpected Exploitability (EE)と呼ばれる新しい指標を提案する.
+\indent この問題を解決するためにExpected Exploitability (EE)と呼ばれる新しい指標を提案する.
 この指標は,脆弱性を「悪用可能」または「悪用不可能」と決定的に分類するのではなく,類似の
 脆弱性に関する過去のパターンに基づいて,機能的なエクスプロイトが開発される可能性を時系列で
 継続的に推定するものである.ここで機能的なエクスプロイトとは,脆弱性が引き起こすセキュリティ
 上の問題を完全に実現するものであり,機能的なエクスプロイトは実際の攻撃を容易にする.この論文
 の目的は機能的なエクスプロイトが開発されることを予測するのが目的である.
 
+\begin{figure}[H]
+  \centering
+  \includegraphics[scale=0.38]{fig/pic1.eps}
+  \caption{脆弱性情報のタイムライン}
+\end{figure}
+
 \section{問題の概要}
 エクスプロイトの開発によって,悪用可能性を証明することができるが,悪用不可能であることを
 証明するのは困難である.その代わりに,脆弱性悪用緩和の取り組みとして,悪用の難しさを
-把握する目的とした脆弱性スコアリングシステムがよく用いられる.以下にその例をあげる.\\
+把握することを目的とした脆弱性スコアリングシステムがよく用いられる.以下にその例をあげる.
 \begin{quote}
   \begin{itemize}
    \item NVD CVSS\begin{math}^{[2]}\end{math}
@@ -76,21 +82,92 @@ the Development of Functional Vulnerability Exploits」\begin{math}^{[1]}\end{ma
     \end{itemize}
    \item RedHat Severity\begin{math}^{[4]}\end{math}
     \begin{itemize}
-      \item CVSSを補完し,RedHat製品に影響を与える脆弱性について専門家の評価によって,同様に脆弱性の悪用の難易度を評価したもの.\\
+      \item CVSSを補完し,RedHat製品に影響を与える脆弱性について専門家の評価によって,同様に脆弱性の悪用の難易度を評価したもの.
     \end{itemize}
   \end{itemize}
 \end{quote}
 しかし,これらのベンダーなどから提供される指標は,不正確であることが報告されている.
 具体的な事例として,Internet Explorerの悪用可能な脆弱性であるCVE-2018-8174は,CVSS
 悪用可能性スコア1.6を獲得し,脆弱性スコアの91\%以下に位置づけられた.同様に,Windows7
-から10に影響を及ぼす悪用される脆弱性であるCVE-2018-8440は,スコアが1.8とされた.
+から10に影響を及ぼす悪用をされる脆弱性であるCVE-2018-8440は,スコアが1.8とされた.これらの
+指標が悪用可能性を適切に反映できない原因を説明するために,図1に典型的な脆弱性のタイム
+ラインを示す.これらの指標は,脆弱性が公開される前に行われる技術的分析によって定める.
+しかし,脆弱性の公開後,脆弱性に関する追加の技術情報やPoCなどの様々な脆弱性
+の成果物が公開され,それらについてSNSなどで議論が行われることが観察された.これらの
+成果物から悪用の可能性についての有益な情報が得られることがよく発生する.CVE-2018-8174
+は技術的なWrite-upの公開がエクスプロイトの開発の直接的な原因になったと報告されており,
+CVE-2018-8440のPoCは2日以内に悪用を引き起こすと判断されている.これらの例は,
+既存の指標が,公開後にのみ利用可能な有用なエクスプロイト情報を考慮できておらず,時間の
+経過と共に更新されていないことを明らかにした.\\
+\indent このことから,悪用可能性の時間的な変化は,確立的なプロセスで記述できることが示唆される.
 
+\section{EE開発の課題}
+EEに教師あり機械学習の技術を適用するためには3つの課題がある.
 
-\section{課題}
+\subsection*{PoCから特徴を抽出する}
+PoCは脆弱性のトリガーとして設計されており,直接的な攻撃は行わない.しかし,機能的なエクスプロイトにおいて
+必要なステップを満たしている.つまり,PoCコードの構造と複雑さは,脆弱性攻撃の難しさを直接反映すると考え
+られる. PoCの持つ予測力を十分に活用するために,PoCの特徴を抽出することが求められる.しかし,PoCは
+様々なプログラム言語で書かれており,コードと事由形式のテキストを組み合わせた物であることが多く,既存の
+プログラム解析技術の適応が制限される.そのため,PoCの特徴抽出には,テキストとコードを分離し,有用なコード表現を
+得るための新しい技術を必要とする.
+
+\subsection*{ノイズの把握と軽減}
+先行研究\begin{math}^{[14]}\end{math}によって,学習に利用できるラベルに偏りがあることが判明している.
+この問題を機械学習におけるラベルノイズの問題と関連付ける試みはこれまで為されていない.さらに,エクスプロイト
+の証拠を提供する個々のベンダーが,脆弱性のカバー率にばらつきがある.このような特徴に依存するノイズの問題はあ
+まり研究されておらず,実世界のアプリケーションにおけるノイズの特徴を発見することは,機械学習における未解決の
+問題と考えられる.このため，ラベルノイズの種類とその影響，およびそれに対処するための学習技術の設計が求められる.
+
+\subsection*{時間的に変化する悪用可能性の評価}
+脆弱性の公開後に出現する成果物は分類を向上させる可能性があるが,公開の遅れはタイムリーな予測の有用性に
+影響を与える.そのため,EEの評価では,リアルタイム性と潜在性という両立困難な指標を使用する必要がある.
 
 \section{収集するデータ}
 
+\subsection*{CVE ID}
+CVE IDは最も広く普及し,相互参照されている公的な脆弱性識別システムの1つであるため,脆弱性を識別す
+るためにCVE IDを使用する.
+
+\subsection*{公開の脆弱性情報}
+PoCがターゲットとする脆弱性に関する情報を,National Vulnerability Database(NVD)\begin{math}^{[5]}\end{math}から収集する.
+NVDには,アナリストが収集した脆弱性情報が掲載されており,高度な技術的情報を得ることができる.各脆弱性に
+対して利用可能な技術情報をより多く把握するために,いくつかの公開情報の参照も行う.以下に参照を行う公開情報の一覧を示す.
+\begin{quote}
+  \begin{itemize}
+   \item Bugtraq\begin{math}^{[6]}\end{math}
+   \item IBM X- Force Exchang\begin{math}^{[7]}\end{math}
+   \item Vulners\begin{math}^{[8]}\end{math}
+  \end{itemize}
+\end{quote}
+これらから278,297の文書、102,936の脆弱性を参照した.これらの文書は脆弱性に関して公開されている技術情報
+の全体像を示すものであり,「write-up」と呼んでいる.
+
+\subsection*{Proof of Concepts (PoCs)}
+ExploitDB\begin{math}^{[9]}\end{math} ,  Bugtraq\begin{math}^{[6]}\end{math} ,  Vulners\begin{math}^{[8]}\end{math}
+の3つのデータベースを参照し,公開PoCのデータ収集を行なった.重複した収集データは除去し,CVE IDにリンクされている48,709件のPoC
+を対象とした.結果21,849件の異なる脆弱性に対応したPoCの収集に成功した.
+
+\subsection*{SNSの情報}
+2014年1月から2019年12月までの間にCVE IDに言及したツイートの収集を行なった.Twitter Filtered Stream API\begin{math}^{[10]}\end{math}
+を用いて52,551件の脆弱性に関する140万のツイートを収集することに成功した.
+
+\subsection*{開発済みのエクスプロイト情報}
+開発済のエクスプロイトに関する包括的なデータセットがないため,複数の公開情報から証拠を集約した.以下は集約に使用した
+公開情報一覧である.
+\begin{quote}
+  \begin{itemize}
+   \item CVSS
+   \item IBM X- Force Exchang\begin{math}^{[7]}\end{math}
+   \item Bugtraq\begin{math}^{[6]}\end{math}
+   \item Tenable Nessus\begin{math}^{[11]}\end{math}
+   \item Skybox\begin{math}^{[12]}\end{math}
+   \item AlienVault OTX\begin{math}^{[13]}\end{math}
+  \end{itemize}
+\end{quote}
+
 \section{評価}
+
 
 \section{おわりに}
 
@@ -106,6 +183,25 @@ the Development of Functional Vulnerability Exploits」\begin{math}^{[1]}\end{ma
       \url{https://www.microsoft.com/en-us/msrc/exploitability-index} . (15/12/2022)
     \bibitem{Red Hat}Severity Rating. RedHat.\\
       \url{https://access.redhat.com/security/updates/classification/} . (15/12/2022)
+    \bibitem{NVD}National vulnerability database.\\
+      \url{https://nvd.nist.gov/} . (15/12/2022)
+    \bibitem{Bugtraq}Bugtraq. Accenture.\\
+      \url{https://bugtraq.securityfocus.com/archive} . (15/12/2022)
+    \bibitem{IBM}IBM X- Force Exchang.\\
+      \url{https://exchange.xforce.ibmcloud.com/} . (15/12/2022)
+    \bibitem{Vulners}Vulners. Vulners vulnerability database.\\
+      \url{https://vulners.com/} . (15/12/2022)
+    \bibitem{ExploitDB}ExploitDB. The exploit database.\\
+      \url{https://www.exploit-db.com/} . (15/12/2022)
+    \bibitem{Twitter}Twitter. Filtered stream.\\
+      \url{https://developer.twitter.com/en/docs/twitter-api/tweets/filtered-stream/introduction} . (15/12/2022)
+    \bibitem{Nessus}Tenable Network Security. Nessus vulnerability scanner.\\
+      \url{https://www.tenable.com/products/nessus} . (15/12/2022)
+    \bibitem{Skybox}SkyBox. Vulnerability center.\\
+      \url{https://www.vulnerabilitycenter.com/#home} . (15/12/2022)
+    \bibitem{AlienVault}Alienvault otx. AlienVault.\\
+      \url{https://otx.alienvault.com/} . (15/12/2022)
+    \bibitem{classify}M. Bozorgi, L. K. Saul, S. Savage, and G. M. Voelker. Beyond heuristics: learning to classify vulnerabilities and predict exploits. In KDD, Washington, DC, Jul 2010.
 \end{thebibliography}
 
 \end{document}
