@@ -57,16 +57,13 @@ the Development of Functional Vulnerability Exploits」\begin{math}^{[1]}\end{ma
 この指標は,脆弱性を「悪用可能」または「悪用不可能」と決定的に分類するのではなく,類似の
 脆弱性に関する過去のパターンに基づいて,機能的なエクスプロイトが開発される可能性を時系列で
 継続的に推定するものである.ここで機能的なエクスプロイトとは,脆弱性が引き起こすセキュリティ
-上の問題を完全に実現するものであり,機能的なエクスプロイトは実際の攻撃を容易にする.この論文
-の目的は機能的なエクスプロイトが開発されることを予測するのが目的である.
+上の問題を完全に実現し,実際の攻撃を容易にするものである.本稿では,2章で
+研究の背景と目的について述べ,3章では開発にあたっての課題について,4章では実際に取集するデータについてまとめ,
+5章でEEの評価を行い,6章でそれらをまとめる.
 
-\begin{figure}[H]
-  \centering
-  \includegraphics[scale=0.38]{fig/pic1.eps}
-  \caption{脆弱性情報のタイムライン}
-\end{figure}
+\section{研究の背景と目的}
 
-\section{問題の概要}
+\subsection*{既存の評価についての問題}
 エクスプロイトの開発によって,悪用可能性を証明することができるが,悪用不可能であることを
 証明するのは困難である.その代わりに,脆弱性悪用緩和の取り組みとして,悪用の難しさを
 把握することを目的とした脆弱性スコアリングシステムがよく用いられる.以下にその例をあげる.
@@ -74,7 +71,7 @@ the Development of Functional Vulnerability Exploits」\begin{math}^{[1]}\end{ma
   \begin{itemize}
    \item NVD CVSS\begin{math}^{[2]}\end{math}
     \begin{itemize}
-      \item 必要なアクセス制御,攻撃ベクトルの複雑さ,権限レベルなど,様々な脆弱性の特性を0～4の値に落とし込んだもの.4が最も悪用可能性が高い.
+      \item 脆弱性を悪用することの容易さと技術的手段を反映することを目的とした,悪用可能性の評価指標を持つスコアリングシステム.必要なアクセス数,攻撃の複雑さ,権限レベルなど,様々な脆弱性の特性を0〜4の数値に落とし込んだもの.
     \end{itemize}
    \item Microsoft Exploitability Index\begin{math}^{[3]}\end{math}
     \begin{itemize}
@@ -86,6 +83,13 @@ the Development of Functional Vulnerability Exploits」\begin{math}^{[1]}\end{ma
     \end{itemize}
   \end{itemize}
 \end{quote}
+
+\begin{figure}[H]
+  \centering
+  \includegraphics[scale=0.4]{fig/pic1.eps}
+  \caption{脆弱性情報のタイムライン}
+\end{figure}
+
 しかし,これらのベンダーなどから提供される指標は,不正確であることが報告されている.
 具体的な事例として,Internet Explorerの悪用可能な脆弱性であるCVE-2018-8174は,CVSS
 悪用可能性スコア1.6を獲得し,脆弱性スコアの91\%以下に位置づけられた.同様に,Windows7
@@ -98,11 +102,22 @@ the Development of Functional Vulnerability Exploits」\begin{math}^{[1]}\end{ma
 は技術的なWrite-upの公開がエクスプロイトの開発の直接的な原因になったと報告されており,
 CVE-2018-8440のPoCは2日以内に悪用を引き起こすと判断されている.これらの例は,
 既存の指標が,公開後にのみ利用可能な有用なエクスプロイト情報を考慮できておらず,時間の
-経過と共に更新されていないことを明らかにした.\\
+経過と共に更新されていないことを明らかにした.
+
+\subsection*{研究の目的}
 \indent このことから,悪用可能性の時間的な変化は,確立的なプロセスで記述できることが示唆される.
+ある時点において,悪用可能性は悪用を観測する確率を符号化した確率変数Eと考えられ,悪用が不可能
+とされている脆弱性には確率0を,悪用が確認されている脆弱性には1を割り当てる.しかし,Eを生成する
+真の分布Eは利用不可能であり,実際はノイズを含めた\begin{math}E^{train}\end{math}を
+使用する必要がある.これは,悪用可能性の期待値を推定する尤度を計算することによって,利用可能な
+データからEを近似する必要があることを意味する.この指標のことをExpected Exploitability (EE)と呼ぶ.
+EEは教師あり機械学習を用いて過去のデータから学習することができ,新しいエクスプロイトが開発,発見される前に
+,脆弱性に対する悪用の可能性を評価することを可能にする.この研究の目的は,既知の脆弱性に対して機能するエクス
+プロイトが開発されるかどうかを予測することで,その脆弱性の悪用可能性を客観的に定量化することである.
 
 \section{EE開発の課題}
 EEに教師あり機械学習の技術を適用するためには3つの課題がある.
+ここでは,それぞれについて説明する.
 
 \subsection*{PoCから特徴を抽出する}
 PoCは脆弱性のトリガーとして設計されており,直接的な攻撃は行わない.しかし,機能的なエクスプロイトにおいて
@@ -124,6 +139,7 @@ PoCは脆弱性のトリガーとして設計されており,直接的な攻撃�
 影響を与える.そのため,EEの評価では,リアルタイム性と潜在性という両立困難な指標を使用する必要がある.
 
 \section{収集するデータ}
+機械学習に必要な特徴量を抽出するために,必要なデータを集める.以下は集めるデータの一覧である.
 
 \subsection*{CVE ID}
 CVE IDは最も広く普及し,相互参照されている公的な脆弱性識別システムの1つであるため,脆弱性を識別す
@@ -167,10 +183,17 @@ ExploitDB\begin{math}^{[9]}\end{math} ,  Bugtraq\begin{math}^{[6]}\end{math} ,  
 \end{quote}
 
 \section{評価}
-
+既存の2種類の悪用可能性予測であるEPSS\begin{math}^{[15]}\end{math}とSocial Media Classifier(SMC)
+と比較を行ったところ.全ての実験において精度を上回った.また,時間によって精度が向上するのも確認された.また,
+緊急性の高い脆弱性,重要な脆弱性についての実験も行い,結果,既存の評価指標よりも高い精度を得ることができた.
+新しい指標
+EEは次のurlで公開されており,CVE IDによって検索をかけ,実際の指標を閲覧することが可能である.\\\url{https://exploitability.app/}
 
 \section{おわりに}
-
+既存の脆弱性情報やエクスプロイトの情報など,様々な情報を取得し機械学習によって学習させ,悪用可能性を予測することに成功していた.
+既存の指標は一度公開されると,更新されないことを問題にあげ,リアルタイム性が極めて高いシステムを開発していた.また,特徴量を
+的確に抽出するための数学的思考やSNS文字列の分析など,多岐にわたる知見が使用されており,極めてレベルの高い研究だと感じた.
+今後は,学習データのノイズをさらに減らすことで更なる精度を期待できると考えられる.
 
 % 参考文献はここに記述
 \begin{thebibliography}{99}
@@ -202,6 +225,7 @@ ExploitDB\begin{math}^{[9]}\end{math} ,  Bugtraq\begin{math}^{[6]}\end{math} ,  
     \bibitem{AlienVault}Alienvault otx. AlienVault.\\
       \url{https://otx.alienvault.com/} . (15/12/2022)
     \bibitem{classify}M. Bozorgi, L. K. Saul, S. Savage, and G. M. Voelker. Beyond heuristics: learning to classify vulnerabilities and predict exploits. In KDD, Washington, DC, Jul 2010.
+    \bibitem{EPSS} J. Jacobs, S. Romanosky, B. Edwards, I. Adjerid, and M. Roytman. Exploit prediction scoring system (epss). Digital Threats: Research and Practice, 2(3), July 2021.
 \end{thebibliography}
 
 \end{document}
